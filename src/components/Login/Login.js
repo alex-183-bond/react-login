@@ -30,15 +30,12 @@ const Login = (props) => {
   const [emailState, dispatchEmail] = useReducer(emailReducer,{ value: '', isValid: null });
   const [passwordState, dispatchPassword] = useReducer(passwordReducer,{ value: '', isValid: null });
 
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      setFormIsValid(passwordState.isValid && emailState.isValid);
-    }, 500);
+  const { isValid: isEmailValid } = emailState;
+  const { isValid: isPasswordValid } = passwordState;
 
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, [passwordState, emailState]);
+  useEffect(() => {
+    setFormIsValid(isEmailValid && isPasswordValid);
+  }, [isEmailValid, isPasswordValid]);
 
   const emailChangeHandler = (event) => {
     dispatchEmail({type: 'USER_INPUT', value: event.target.value});
@@ -66,7 +63,7 @@ const Login = (props) => {
       <form onSubmit={submitHandler}>
         <div
           className={`${classes.control} ${
-              emailState.isValid === false ? classes.invalid : ''
+              isEmailValid === false ? classes.invalid : ''
           }`}
         >
           <label htmlFor="email">E-Mail</label>
@@ -80,7 +77,7 @@ const Login = (props) => {
         </div>
         <div
           className={`${classes.control} ${
-            passwordState.isValid === false ? classes.invalid : ''
+            isPasswordValid === false ? classes.invalid : ''
           }`}
         >
           <label htmlFor="password">Password</label>
